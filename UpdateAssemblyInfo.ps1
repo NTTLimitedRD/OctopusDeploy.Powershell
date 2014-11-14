@@ -54,15 +54,6 @@ Function UpdateNuSpecWithBuildNumber([string] $nuSpecFile)
     Set-Content $nuSpecFile -Value $nuSpec
 }
 
-Function UpdateCombinedPortalImgProjVersions([string] $imgProjFile)
-{
-    $content = Get-Content $imgProjFile
-    $content = $content -replace "\<TargetPackageVersion\>(.+)<\/TargetPackageVersion\>", "<TargetPackageVersion>1.1.$buildId.0</TargetPackageVersion>"
-    $content = $content -replace "\<UnifiedCommunicationsPackageVersion\>(.+)<\/UnifiedCommunicationsPackageVersion\>", "<UnifiedCommunicationsPackageVersion>1.1.$buildId.0</UnifiedCommunicationsPackageVersion>"
-
-    Set-Content $imgProjFile -Value $content
-}
-
 $currentDir = (Get-Location).Path
 UpdateAssemblyInfoWithBuildNumber(Join-Path $currentDir "SolutionAssemblyInfo.cs")
 UpdateNuSpecWithBuildNumber(Join-Path $currentDir "OctopusDeploy.Powershell\OctopusDeploy.Powershell.nuspec")
