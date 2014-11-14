@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
+  <metadata minClientVersion="2.8">
+    <id>OctopusDeploy.Powershell</id>
+    <version>1.0.0.0</version>
+    <title>Octopus Deploy Powershell module</title>
+    <authors>Edwin Ho</authors>
+    <owners>edwin.ho@itaas.dimensiondata.com.au</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <developmentDependency>true</developmentDependency>
+    <description>Powershell module for Octopus Deploy</description>
+    <summary>Powershell module for Octopus Deploy</summary>
+    <copyright>2014 (c) Dimension Data Cloud</copyright>
+    <language>en-AU</language>
+    <tags>octopus deploy powershell module</tags>
+  </metadata>
+  <files>
+    <file src="Modules\OctopusDeploy\**\*.*" />
+  </files>
+</package>

@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1EB4C6F1-2B90-4A41-8A4F-9F1A0EA94931}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DD.Cloud.OctopusDeploy.Powershell</RootNamespace>
+    <AssemblyName>DD.Cloud.OctopusDeploy.Powershell</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="RestSharp">
+      <HintPath>..\packages\RestSharp.105.0.0\lib\net4\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\System.Management.Automation.6.1.7601.17515\lib\net45\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\SolutionAssemblyInfo.cs">
+      <Link>Properties\SolutionAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="AsyncCmdlet.cs" />
+    <Compile Include="Contracts\Deployment.cs" />
+    <Compile Include="Contracts\DeploymentProcessTemplate.cs" />
+    <Compile Include="Contracts\Environment.cs" />
+    <Compile Include="Contracts\OctoResponse.cs" />
+    <Compile Include="Contracts\Package.cs" />
+    <Compile Include="Contracts\PackageTemplate.cs" />
+    <Compile Include="Contracts\Project.cs" />
+    <Compile Include="Contracts\ProjectGroup.cs" />
+    <Compile Include="Contracts\Release.cs" />
+    <Compile Include="Contracts\Scope.cs" />
+    <Compile Include="Contracts\StepPackage.cs" />
+    <Compile Include="Contracts\Task.cs" />
+    <Compile Include="Contracts\Variable.cs" />
+    <Compile Include="Contracts\VariableSet.cs" />
+    <Compile Include="GetOctoDeployment.cs" />
+    <Compile Include="GetOctoEnvironment.cs" />
+    <Compile Include="GetOctoProject.cs" />
+    <Compile Include="GetOctoProjectGroup.cs" />
+    <Compile Include="GetOctoRelease.cs" />
+    <Compile Include="GetOctoTask.cs" />
+    <Compile Include="GetOctoVariableSet.cs" />
+    <Compile Include="NewOctoDeployment.cs" />
+    <Compile Include="NewOctoRelease.cs" />
+    <Compile Include="OctoCmdlet.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SetOctoDefaults.cs" />
+    <Compile Include="ThreadAffinitiveSynchronizationContext.cs" />
+    <Compile Include="WaitOctoTask.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="OctopusDeploy.psd1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="OctopusDeploy.Powershell.nuspec" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- Staging logic -->
+  <PropertyGroup>
+    <StageDir>..\Stage</StageDir>
+    <NuspecFile>OctopusDeploy.Powershell.nuspec</NuspecFile>
+  </PropertyGroup>
+  <Target Name="StageOutputs" AfterTargets="CopyFilesToOutputDirectory" DependsOnTargets="BuiltProjectOutputGroup;DebugSymbolsProjectOutputGroup;DocumentationProjectOutputGroup;ContentFilesProjectOutputGroup;ResolveReferences">
+    <!-- Stage primary output -->
+    <Copy SourceFiles="@(BuiltProjectOutputGroupOutput)" DestinationFolder="$(StageDir)\Modules\OctopusDeploy" SkipUnchangedFiles="True" />
+    <!--  Stage dependencies -->
+    <Copy SourceFiles="@(ReferenceCopyLocalPaths)" DestinationFolder="$(StageDir)\Modules\OctopusDeploy" SkipUnchangedFiles="True" />
+    <!-- Stage symbols -->
+    <Copy SourceFiles="@(DebugSymbolsProjectOutputGroupOutput)" DestinationFolder="$(StageDir)\Modules\OctopusDeploy" SkipUnchangedFiles="True" />
+    <!-- Stage IntelliDoc -->
+    <Copy SourceFiles="@(DocumentationProjectOutputGroupOutput)" DestinationFolder="$(StageDir)\Modules\OctopusDeploy" SkipUnchangedFiles="True" />
+    <!-- Stage Content -->
+    <Copy SourceFiles="@(ContentFilesProjectOutputGroupOutput)" DestinationFiles="@(ContentFilesProjectOutputGroupOutput->'$(StageDir)\Modules\OctopusDeploy\%(TargetPath)')" SkipUnchangedFiles="True" />
+  </Target>
+</Project>
