@@ -55,6 +55,16 @@
         }
 
         /// <summary>
+        /// The release belongs to.
+        /// </summary>
+        [Parameter(Mandatory = false)]
+        public string ReleaseNotes
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         ///		Asynchronously perform Cmdlet processing.
         /// </summary>
         /// <returns>
@@ -101,7 +111,7 @@
                 ProjectId = projectId,
                 Version = Version.ToString(),
                 SelectedPackages = packages.ToList(),
-                ReleaseNotes = packagesDescription
+                ReleaseNotes = string.IsNullOrEmpty(ReleaseNotes) ? packagesDescription : string.Join(System.Environment.NewLine, ReleaseNotes, packagesDescription)
             });
 
             var response = await client.ExecuteTaskAsync<Contracts.Release>(request);
