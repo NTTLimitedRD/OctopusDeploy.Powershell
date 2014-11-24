@@ -160,7 +160,7 @@
                 return new StepPackage{ PackageId = packageTemplate.NuGetPackageId, StepName = packageTemplate.StepName, Version = specificPackageVersions[packageTemplate.NuGetPackageId].ToString() };
             }
 
-            var resourcePath = "/api/feeds/{feed-id}/packages";
+            const string resourcePath = "/api/feeds/{feed-id}/packages";
             var request = new RestRequest(resourcePath, Method.GET);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
             request.AddUrlSegment("feed-id", packageTemplate.NuGetFeedId);
@@ -171,6 +171,17 @@
                 ThrowTerminatingError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
 
             var package = response.Data.FirstOrDefault();
+
+            if (package == null)
+            {
+                ThrowTerminatingError(new ErrorRecord(
+                        new Exception(string.Format("Package is missing from feed. PackageId:{0} Feed:{1}", packageTemplate.NuGetPackageId, packageTemplate.NuGetFeedName)),
+                        "MissingPackage",
+                        ErrorCategory.ObjectNotFound, 
+                        null 
+                    ));
+            }
+
             WriteVerbose(string.Format("{0} {1}", package.NuGetPackageId, package.Version));
 
             return new StepPackage { PackageId = packageTemplate.NuGetPackageId, StepName = packageTemplate.StepName, Version = package.Version };
