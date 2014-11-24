@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/01/nuspec.xsd">
   <metadata minClientVersion="2.8">
     <id>OctopusDeploy.Powershell</id>
-    <version>1.0.0.1</version>
+    <version>1.1.20000.0</version>
     <title>Octopus Deploy Powershell module</title>
     <authors>Edwin Ho</authors>
     <owners>edwin.ho@itaas.dimensiondata.com.au</owners>
