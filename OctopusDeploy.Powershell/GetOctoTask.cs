@@ -49,9 +49,6 @@ namespace DD.Cloud.OctopusDeploy.Powershell
         /// </returns>
         protected override async Task ProcessRecordAsync()
         {
-            BaseUri = new Uri("http://175.184.202.15/");
-            ApiKey = "API-IMFWZ31LUKHNH1Y8WLS4KF15DY0";
-
             var client = new RestClient(BaseUri);
 
             string taskId = string.Empty;
