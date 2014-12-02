@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="AsyncCmdlet.cs" />
     <Compile Include="Contracts\Deployment.cs" />
+    <Compile Include="Contracts\DeploymentProcess.cs" />
     <Compile Include="Contracts\DeploymentProcessTemplate.cs" />
     <Compile Include="Contracts\Environment.cs" />
     <Compile Include="Contracts\OctoResponse.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Contracts\Task.cs" />
     <Compile Include="Contracts\Variable.cs" />
     <Compile Include="Contracts\VariableSet.cs" />
+    <Compile Include="GetOctoDeploymentProcess.cs" />
     <Compile Include="GetOctoDeployment.cs" />
     <Compile Include="GetOctoEnvironment.cs" />
     <Compile Include="GetOctoProject.cs" />

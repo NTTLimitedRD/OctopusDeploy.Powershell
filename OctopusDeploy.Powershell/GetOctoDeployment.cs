@@ -75,11 +75,19 @@ namespace DD.Cloud.OctopusDeploy.Powershell
                 return;
             }
 
-            string environmentId = EnvironmentId;
-            if (string.IsNullOrWhiteSpace(environmentId) && Environment != null)
-                environmentId = Environment.Id;
+            if (EnvironmentId != null || Environment != null)
+            {
+                string environmentId = EnvironmentId;
+                if (string.IsNullOrWhiteSpace(environmentId) && Environment != null)
+                    environmentId = Environment.Id;
 
-            WriteObject(response.Data.Items.Where(i => i.EnvironmentId == environmentId), true);
+                WriteObject(response.Data.Items.Where(i => i.EnvironmentId == environmentId), true);
+   
+            }
+            else
+            {
+                WriteObject(response.Data);   
+            }
         }
     }
 }
