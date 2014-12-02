@@ -56,6 +56,12 @@
             set;
         }
 
+        public string ProjectDeploymentProcessSnapshotId
+        {
+            get;
+            set;
+        }
+
         public List<StepPackage> SelectedPackages
         {
             get;
