@@ -97,7 +97,7 @@
 
             var packageTemplates = await GetPackageTemplatesAsync(client, deploymentProecessId);
 
-            var specificPackageVersions = SpecificPackageVersions.Cast<DictionaryEntry>().ToDictionary(k => k.Key.ToString(), v => new Version(v.Value.ToString()));
+            var specificPackageVersions = SpecificPackageVersions.Cast<DictionaryEntry>().ToDictionary(k => k.Key.ToString(), v => v.Value.ToString());
             var tasks = packageTemplates.Select(packageTemplate => GetLatestPackageFromTemplatesAsync(client, packageTemplate, specificPackageVersions));
             var packages = await Task.WhenAll(tasks);
 
@@ -153,11 +153,11 @@
             return response.Data.Packages;
         }
 
-        async Task<Contracts.StepPackage> GetLatestPackageFromTemplatesAsync(IRestClient client, Contracts.PackageTemplate packageTemplate, IDictionary<string, Version> specificPackageVersions = null)
+        async Task<Contracts.StepPackage> GetLatestPackageFromTemplatesAsync(IRestClient client, Contracts.PackageTemplate packageTemplate, IDictionary<string, string> specificPackageVersions = null)
         {
             if (specificPackageVersions != null && specificPackageVersions.ContainsKey(packageTemplate.NuGetPackageId))
             {
-                return new StepPackage{ PackageId = packageTemplate.NuGetPackageId, StepName = packageTemplate.StepName, Version = specificPackageVersions[packageTemplate.NuGetPackageId].ToString() };
+                return new StepPackage{ PackageId = packageTemplate.NuGetPackageId, StepName = packageTemplate.StepName, Version = specificPackageVersions[packageTemplate.NuGetPackageId] };
             }
 
             const string resourcePath = "/api/feeds/{feed-id}/packages";
