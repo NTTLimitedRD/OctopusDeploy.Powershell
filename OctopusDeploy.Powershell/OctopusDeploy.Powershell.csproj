@@ -62,6 +62,7 @@
     <Compile Include="Contracts\PackageTemplate.cs" />
     <Compile Include="Contracts\Project.cs" />
     <Compile Include="Contracts\ProjectGroup.cs" />
+    <Compile Include="Contracts\Releases.cs" />
     <Compile Include="Contracts\Release.cs" />
     <Compile Include="Contracts\Scope.cs" />
     <Compile Include="Contracts\StepPackage.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="GetOctoEnvironment.cs" />
     <Compile Include="GetOctoProject.cs" />
     <Compile Include="GetOctoProjectGroup.cs" />
+    <Compile Include="GetOctoReleases.cs" />
     <Compile Include="GetOctoRelease.cs" />
     <Compile Include="GetOctoTask.cs" />
     <Compile Include="GetOctoVariableSet.cs" />
