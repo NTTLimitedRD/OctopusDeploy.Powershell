@@ -79,6 +79,7 @@
     <Compile Include="GetOctoTask.cs" />
     <Compile Include="GetOctoVariableSet.cs" />
     <Compile Include="NewOctoDeployment.cs" />
+    <Compile Include="SetOctoRelease .cs" />
     <Compile Include="NewOctoRelease.cs" />
     <Compile Include="OctoCmdlet.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
