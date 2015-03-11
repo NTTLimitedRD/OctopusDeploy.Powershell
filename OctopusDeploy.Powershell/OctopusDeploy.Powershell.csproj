@@ -57,6 +57,8 @@
     <Compile Include="Contracts\DeploymentProcess.cs" />
     <Compile Include="Contracts\DeploymentProcessTemplate.cs" />
     <Compile Include="Contracts\Environment.cs" />
+    <Compile Include="Contracts\Feed.cs" />
+    <Compile Include="Contracts\Feeds.cs" />
     <Compile Include="Contracts\OctoResponse.cs" />
     <Compile Include="Contracts\Package.cs" />
     <Compile Include="Contracts\PackageTemplate.cs" />
@@ -72,8 +74,10 @@
     <Compile Include="GetOctoDeploymentProcess.cs" />
     <Compile Include="GetOctoDeployment.cs" />
     <Compile Include="GetOctoEnvironment.cs" />
+    <Compile Include="GetOctoFeed.cs" />
     <Compile Include="GetOctoProject.cs" />
     <Compile Include="GetOctoProjectGroup.cs" />
+    <Compile Include="GetOctoFeeds.cs" />
     <Compile Include="GetOctoReleases.cs" />
     <Compile Include="GetOctoRelease.cs" />
     <Compile Include="GetOctoTask.cs" />
