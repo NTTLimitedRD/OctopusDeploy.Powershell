@@ -108,7 +108,6 @@ namespace DD.Cloud.OctopusDeploy.Powershell
 
                     response.Data.Items = allReleases;
                     WriteObject(response.Data);
-
                 }
                 else
                 {
@@ -141,6 +140,5 @@ namespace DD.Cloud.OctopusDeploy.Powershell
             };
             WriteProgress(myprogress);
         }
-
     }
 }
