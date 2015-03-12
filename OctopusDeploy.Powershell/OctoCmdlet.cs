@@ -12,7 +12,7 @@
         string _apiKey;
 
         /// <summary>
-        /// The name of the project the release belongs to.
+        /// The Base Uri for Octopus API.
         /// </summary>
         [Parameter]
         public Uri BaseUri
@@ -36,7 +36,7 @@
         }
 
         /// <summary>
-        /// The name of the project the release belongs to.
+        /// The API key to call the Rest API with.
         /// </summary>
         [Parameter]
         public string ApiKey
