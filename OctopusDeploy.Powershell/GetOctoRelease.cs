@@ -19,7 +19,7 @@ namespace DD.Cloud.OctopusDeploy.Powershell
         [Parameter(Mandatory = true)]
         [Parameter(ParameterSetName = "GetOctoReleaseByProject")]
         [Parameter(ParameterSetName = "GetOctoReleaseByProjectId")]
-        public Version Version
+        public string Version
         {
             get;
             set;
@@ -74,7 +74,7 @@ namespace DD.Cloud.OctopusDeploy.Powershell
             var request = new RestRequest("/api/projects/{projectId}/releases/{version}", Method.GET);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
             request.AddUrlSegment("projectId", projectId);
-            request.AddUrlSegment("version", Version.ToString());
+            request.AddUrlSegment("version", Version);
 
             var response = await client.ExecuteTaskAsync<Contracts.Release>(request);
             if (response.StatusCode != HttpStatusCode.OK)
