@@ -77,7 +77,31 @@
                 WriteError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
                 return;
             }
+            var allProjectsResponse = response;
 
+            if (response.Data.ItemsPerPage < response.Data.TotalResults)
+            {
+                var loop = (double)response.Data.TotalResults / response.Data.ItemsPerPage;
+                loop = Math.Ceiling(loop);
+                for (var i = 1; i < loop; i++)
+                {
+                    var skip = i*response.Data.ItemsPerPage;
+                    var uri = "/api/projects/";
+                    uri += @"?skip=" + skip;
+
+
+                    var newRequest = new RestRequest(uri, Method.GET);
+                    newRequest.AddHeader("X-Octopus-ApiKey", ApiKey);
+
+                    var tmpResponse = await client.ExecuteTaskAsync<OctoResponse<Project>>(newRequest);
+                    if (tmpResponse.StatusCode != HttpStatusCode.OK)
+                    {
+                        WriteError(new ErrorRecord(new Exception(tmpResponse.ErrorMessage ?? tmpResponse.Content), "Failed", ErrorCategory.OpenError, null));
+                        return;
+                    }
+                    allProjectsResponse.Data.Items.AddRange(tmpResponse.Data.Items);
+                }
+            }
             string projectGroupId = ProjectGroupId;
             if (string.IsNullOrWhiteSpace(projectGroupId) && ProjectGroup != null)
                 projectGroupId = ProjectGroup.Id;
@@ -85,7 +109,7 @@
             if (ListAvailable.IsPresent)
             {
                 WriteObject(
-                    response.Data.Items.Where(
+                    allProjectsResponse.Data.Items.Where(
                         i => string.IsNullOrWhiteSpace(projectGroupId) ||
                              (!string.IsNullOrWhiteSpace(projectGroupId) &&
                               string.Compare(projectGroupId, i.ProjectGroupId, StringComparison.InvariantCultureIgnoreCase) == 0)),
@@ -94,7 +118,7 @@
             else
             {
                 WriteObject(
-                    response.Data.Items
+                    allProjectsResponse.Data.Items
                         .FirstOrDefault(
                             i => (string.IsNullOrWhiteSpace(projectGroupId) && string.Compare(i.Name, filterByName, StringComparison.InvariantCultureIgnoreCase) == 0) ||
                                  (!string.IsNullOrWhiteSpace(projectGroupId) && string.Compare(i.Name, filterByName, StringComparison.InvariantCultureIgnoreCase) == 0 && string.Compare(i.ProjectGroupId, projectGroupId, StringComparison.InvariantCultureIgnoreCase) == 0)
