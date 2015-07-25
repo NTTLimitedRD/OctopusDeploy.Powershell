@@ -95,7 +95,9 @@
     <Content Include="OctopusDeploy.psd1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="OctopusDeploy.Powershell.nuspec" />
+    <None Include="OctopusDeploy.Powershell.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

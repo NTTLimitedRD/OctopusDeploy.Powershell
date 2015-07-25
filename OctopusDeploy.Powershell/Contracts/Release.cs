@@ -56,6 +56,14 @@
             set;
         }
 
+        public string ProjectVariableSetSnapshotId { get; set; }
+
+        public List<string> LibraryVariableSetSnapshotIds
+        {
+            get;
+            set;
+        }
+
         public string ProjectDeploymentProcessSnapshotId
         {
             get;
