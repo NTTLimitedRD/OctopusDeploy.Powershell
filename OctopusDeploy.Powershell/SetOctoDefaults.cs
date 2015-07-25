@@ -34,12 +34,12 @@ namespace DD.Cloud.OctopusDeploy.Powershell
         {
             if (BaseUri != null)
             {
-                SessionState.PSVariable.Set("OctoBaseUri", BaseUri);
+                SessionState.PSVariable.Set("global:OctoBaseUri", BaseUri);
             }
 
             if (ApiKey != null)
             {
-                SessionState.PSVariable.Set("OctoApiKey", ApiKey);
+                SessionState.PSVariable.Set("global:OctoApiKey", ApiKey);
             }
         }
     }

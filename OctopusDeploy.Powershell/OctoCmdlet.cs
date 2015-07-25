@@ -22,7 +22,7 @@
                 if (_baseUri != null)
                     return _baseUri;
 
-                var psVar = SessionState.PSVariable.Get("OctoBaseUri");
+                var psVar = SessionState.PSVariable.Get("global:OctoBaseUri");
                 if (psVar != null)
                     return psVar.Value as Uri;
 
@@ -46,7 +46,7 @@
                 if (_apiKey != null)
                     return _apiKey;
 
-                var psVar = SessionState.PSVariable.Get("OctoApiKey");
+                var psVar = SessionState.PSVariable.Get("global:OctoApiKey");
                 if (psVar != null)
                     return psVar.Value as string;
 
