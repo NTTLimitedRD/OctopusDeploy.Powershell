@@ -14,6 +14,11 @@
     [Cmdlet(VerbsCommon.New, "OctoRelease", ConfirmImpact = ConfirmImpact.Medium)]
     public class NewOctoRelease : OctoCmdlet
     {
+	    public NewOctoRelease()
+	    {
+			SpecificPackageVersions = new Hashtable();
+	    }
+
         /// <summary>
         /// The version of the release to retrieve 
         /// </summary>
@@ -97,7 +102,10 @@
 
             var packageTemplates = await GetPackageTemplatesAsync(client, deploymentProecessId);
 
-            var specificPackageVersions = SpecificPackageVersions.Cast<DictionaryEntry>().ToDictionary(k => k.Key.ToString(), v => v.Value.ToString());
+
+	        var specificPackageVersions = SpecificPackageVersions.Cast<DictionaryEntry>()
+																	.ToDictionary(k => k.Key.ToString(), v => v.Value.ToString());
+
             var tasks = packageTemplates.Select(packageTemplate => GetLatestPackageFromTemplatesAsync(client, packageTemplate, specificPackageVersions));
             var packages = await Task.WhenAll(tasks);
 
