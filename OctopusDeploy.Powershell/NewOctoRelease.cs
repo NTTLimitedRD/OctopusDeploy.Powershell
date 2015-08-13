@@ -110,7 +110,7 @@
             var packages = await Task.WhenAll(tasks);
 
             string packagesDescription = string.Join(System.Environment.NewLine,
-                                                     packages.Select(package => string.Format("{0} {1}", package.PackageId, package.Version)));
+                                                     packages.OrderBy(package => package.PackageId).Select(package => string.Format("- {0} {1}", package.PackageId, package.Version)));
 
             var request = new RestRequest("/api/releases", Method.POST);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
@@ -119,7 +119,7 @@
                 ProjectId = projectId,
                 Version = Version.ToString(),
                 SelectedPackages = packages.ToList(),
-                ReleaseNotes = string.IsNullOrEmpty(ReleaseNotes) ? packagesDescription : string.Join(System.Environment.NewLine, ReleaseNotes, packagesDescription)
+                ReleaseNotes = string.IsNullOrEmpty(ReleaseNotes) ? packagesDescription : string.Join(System.Environment.NewLine+System.Environment.NewLine, ReleaseNotes, packagesDescription)
             });
 
             var response = await client.ExecuteTaskAsync<Contracts.Release>(request);
