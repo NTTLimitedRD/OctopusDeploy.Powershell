@@ -162,34 +162,61 @@
         }
 
         async Task<Contracts.StepPackage> GetLatestPackageFromTemplatesAsync(IRestClient client, Contracts.PackageTemplate packageTemplate, IDictionary<string, string> specificPackageVersions = null)
-        {
+        {            
+            RestRequest request;
+            // The Validation should force indexing of this package (for older versions)
+            if (specificPackageVersions != null && specificPackageVersions.ContainsKey(packageTemplate.NuGetPackageId))
+            {
+                // Validate the package if it exists, by just getting the notes for the package
+                // if the package doesnt exists, this will return 404
+                const string packageNoteApiPath = "/api/feeds/{feed-id}/packages/notes";
+                request = new RestRequest(packageNoteApiPath, Method.GET);
+                request.AddHeader("X-Octopus-ApiKey", ApiKey);
+                request.AddUrlSegment("feed-id", packageTemplate.NuGetFeedId);
+                request.AddQueryParameter("packageId", packageTemplate.NuGetPackageId);
+                request.AddQueryParameter("version", specificPackageVersions[packageTemplate.NuGetPackageId]);
+
+                var noteResponse = await client.ExecuteGetTaskAsync(request);
+
+                if (noteResponse.StatusCode != HttpStatusCode.OK)
+                {
+                    ThrowTerminatingError(new ErrorRecord(
+                            new Exception(
+                                string.Format("Package is missing from feed. PackageId:{0} Version:{1} Feed:{2}",
+                                    packageTemplate.NuGetPackageId,
+                                    specificPackageVersions[packageTemplate.NuGetPackageId],
+                                    packageTemplate.NuGetFeedName)),
+                            "MissingPackage",
+                            ErrorCategory.ObjectNotFound,
+                            null
+                        ));
+                }
+                return new StepPackage
+                {
+                    PackageId = packageTemplate.NuGetPackageId,
+                    StepName = packageTemplate.StepName,
+                    Version = specificPackageVersions[packageTemplate.NuGetPackageId]
+                };
+            }
+
             const string resourcePath = "/api/feeds/{feed-id}/packages";
-            var request = new RestRequest(resourcePath, Method.GET);
+            request = new RestRequest(resourcePath, Method.GET);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
             request.AddUrlSegment("feed-id", packageTemplate.NuGetFeedId);
-			request.AddQueryParameter("packageId", packageTemplate.NuGetPackageId);
-			request.AddQueryParameter("includeMultipleVersions", "true");
-
-			string version = null;
-			if (specificPackageVersions != null && specificPackageVersions.ContainsKey(packageTemplate.NuGetPackageId))
-			{
-				version = specificPackageVersions[packageTemplate.NuGetPackageId];
-				request.AddQueryParameter("includePreRelease", "true");
-			}
+            request.AddQueryParameter("packageIds", packageTemplate.NuGetPackageId); // Just returns the latest release version of this package
 
             var response = await client.ExecuteTaskAsync<List<Contracts.Package>>(request);
             if (response.StatusCode != HttpStatusCode.OK)
                 ThrowTerminatingError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
 
-            var package = String.IsNullOrEmpty(version) ? response.Data.FirstOrDefault() : response.Data.FirstOrDefault(p => p.Version == version);
+            var package = response.Data.FirstOrDefault();
 
             if (package == null)
             {
                 ThrowTerminatingError(new ErrorRecord(
                         new Exception(
-							string.Format("Package is missing from feed. PackageId:{0}{1} Feed:{2}", 
+							string.Format("Package is missing from feed. PackageId:{0} Feed:{1}", 
 								packageTemplate.NuGetPackageId,
-								String.IsNullOrEmpty(version) ? "" : string.Format(" Version:{0}", version),
 								packageTemplate.NuGetFeedName)),
                         "MissingPackage",
                         ErrorCategory.ObjectNotFound, 
