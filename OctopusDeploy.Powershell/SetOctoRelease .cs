@@ -17,7 +17,7 @@
         [Parameter(Mandatory = true)]
         [Parameter(ParameterSetName = "SetOctoReleaseByProject")]
         [Parameter(ParameterSetName = "SetOctoReleaseByProjectId")]
-        public Version Version
+        public string Version
         {
             get;
             set;
@@ -90,7 +90,7 @@
                 {
                     ProjectId = projectId,
                     Id = release.Id,
-                    Version = Version.ToString(),
+                    Version = Version,
                     SelectedPackages = release.SelectedPackages,
                     ReleaseNotes = string.IsNullOrEmpty(ReleaseNotes) ? release.ReleaseNotes : ReleaseNotes
                 });
@@ -108,12 +108,12 @@
             }
         }
 
-        private async Task<Release> GetReleaseAsync(RestClient client, Version version, string projectId)
+        private async Task<Release> GetReleaseAsync(RestClient client, string version, string projectId)
         {
             var request = new RestRequest("/api/projects/{projectId}/releases/{version}", Method.GET);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
             request.AddUrlSegment("projectId", projectId);
-            request.AddUrlSegment("version", version.ToString());
+            request.AddUrlSegment("version", version);
 
             var response = await client.ExecuteTaskAsync<Contracts.Release>(request);
             if (response.StatusCode != HttpStatusCode.OK)

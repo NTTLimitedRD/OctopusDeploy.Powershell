@@ -25,7 +25,7 @@
         [Parameter(Mandatory = true)]
         [Parameter(ParameterSetName = "NewOctoReleaseByProject")]
         [Parameter(ParameterSetName = "NewOctoReleaseByProjectId")]
-        public Version Version
+        public string Version
         {
             get;
             set;
@@ -117,7 +117,7 @@
             request.AddJsonBody(new Contracts.Release
             {
                 ProjectId = projectId,
-                Version = Version.ToString(),
+                Version = Version,
                 SelectedPackages = packages.ToList(),
                 ReleaseNotes = string.IsNullOrEmpty(ReleaseNotes) ? packagesDescription : string.Join(System.Environment.NewLine+System.Environment.NewLine, ReleaseNotes, packagesDescription)
             });

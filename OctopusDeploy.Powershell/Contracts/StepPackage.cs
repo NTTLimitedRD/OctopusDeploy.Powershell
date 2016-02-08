@@ -13,7 +13,7 @@ namespace DD.Cloud.OctopusDeploy.Powershell.Contracts
             set;
         }
 
-        public Version Version
+        public string Version
         {
             get;
             set;
