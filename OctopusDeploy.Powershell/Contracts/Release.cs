@@ -32,6 +32,11 @@
             set;
         }
 
+        public string ChannelId
+        {
+            get;
+            set;
+        }
         public string ProjectId
         {
             get;

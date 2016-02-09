@@ -70,6 +70,17 @@
         }
 
         /// <summary>
+        /// The release goes to the specified channel.
+        /// </summary>
+        [Parameter(Mandatory = false, ParameterSetName = "NewOctoReleaseByProject")]
+        [Parameter(Mandatory = false, ParameterSetName = "NewOctoReleaseByProjectId")]
+        public string ChannelName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         ///		Asynchronously perform Cmdlet processing.
         /// </summary>
         /// <returns>
@@ -99,8 +110,9 @@
                     break;
                 }
             }
-
-            var packageTemplates = await GetPackageTemplatesAsync(client, deploymentProecessId);
+            var channel = await GetProjectChannelAsync(client, projectId, ChannelName);
+            var channelId = channel != null ? channel.Id : string.Empty;
+            var packageTemplates = await GetPackageTemplatesAsync(client, deploymentProecessId, channelId);
 
 
 	        var specificPackageVersions = SpecificPackageVersions.Cast<DictionaryEntry>()
@@ -111,11 +123,12 @@
 
             string packagesDescription = string.Join(System.Environment.NewLine,
                                                      packages.OrderBy(package => package.PackageId).Select(package => string.Format("- {0} {1}", package.PackageId, package.Version)));
-
+           
             var request = new RestRequest("/api/releases", Method.POST);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
             request.AddJsonBody(new Contracts.Release
             {
+                ChannelId = channelId,
                 ProjectId = projectId,
                 Version = Version,
                 SelectedPackages = packages.ToList(),
@@ -147,12 +160,48 @@
             return response.Data;
         }
 
-        async Task<IEnumerable<Contracts.PackageTemplate>> GetPackageTemplatesAsync(IRestClient client, string deploymentProcessId)
+
+        async Task<Contracts.Channel> GetProjectChannelAsync(IRestClient client, string projectId, string channelName)
+        {
+            Contracts.Channel channel = null;
+
+            if (string.IsNullOrWhiteSpace(channelName))
+                return null;
+
+            var resourcePath = "/api/projects/{id}/channels";
+            var request = new RestRequest(resourcePath, Method.GET);
+            request.AddHeader("X-Octopus-ApiKey", ApiKey);
+            request.AddUrlSegment("id", projectId);
+
+            var response = await client.ExecuteTaskAsync<Contracts.PagedResult<Channel>>(request);
+            if (response.StatusCode != HttpStatusCode.OK)
+                ThrowTerminatingError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
+
+            channel = response.Data.Items.FirstOrDefault(ch => string.Compare(ch.Name, channelName.Trim(' '), StringComparison.OrdinalIgnoreCase) == 0);
+
+            if(channel == null)
+                ThrowTerminatingError(new ErrorRecord(
+                            new Exception(
+                                string.Format("Channel is missing from the project. ProjectId:{0} ChannelName:{1}",
+                                    projectId,
+                                    channelName)),
+                            "MissingChannel",
+                            ErrorCategory.ObjectNotFound,
+                            null
+                        ));
+
+
+            return channel;
+        }
+
+        async Task<IEnumerable<Contracts.PackageTemplate>> GetPackageTemplatesAsync(IRestClient client, string deploymentProcessId, string channelId)
         {
             var resourcePath = "/api/deploymentprocesses/{deployment-process-id}/template";
             var request = new RestRequest(resourcePath, Method.GET);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
             request.AddUrlSegment("deployment-process-id", deploymentProcessId);
+            if(!string.IsNullOrWhiteSpace(channelId))
+                request.AddQueryParameter("channel", channelId);
 
             var response = await client.ExecuteTaskAsync<Contracts.DeploymentProcessTemplate>(request);
             if (response.StatusCode != HttpStatusCode.OK)

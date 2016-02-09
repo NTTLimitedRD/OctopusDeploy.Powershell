@@ -53,10 +53,12 @@
       <Link>Properties\SolutionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AsyncCmdlet.cs" />
+    <Compile Include="Contracts\PagedResponse.cs" />
     <Compile Include="Contracts\Deployment.cs" />
     <Compile Include="Contracts\DeploymentProcess.cs" />
     <Compile Include="Contracts\DeploymentProcessTemplate.cs" />
     <Compile Include="Contracts\Environment.cs" />
+    <Compile Include="Contracts\Channel.cs" />
     <Compile Include="Contracts\Feed.cs" />
     <Compile Include="Contracts\Feeds.cs" />
     <Compile Include="Contracts\OctoResponse.cs" />
