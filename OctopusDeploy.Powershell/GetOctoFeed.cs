@@ -11,7 +11,7 @@ namespace DD.Cloud.OctopusDeploy.Powershell
     public class GetOctoFeed : OctoCmdlet
     {
         /// <summary>
-        /// The project the release belongs to.
+        /// The Feed.
         /// </summary>
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = "GetOctoFeedsByFeed")]
         public Contracts.Feed Feed
@@ -21,7 +21,7 @@ namespace DD.Cloud.OctopusDeploy.Powershell
         }
 
         /// <summary>
-        /// The project the release belongs to.
+        /// The FeedId.
         /// </summary>
         [Parameter(Mandatory = true, ParameterSetName = "GetOctoFeedsByFeedId")]
         public string FeedId
