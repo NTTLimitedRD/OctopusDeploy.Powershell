@@ -10,7 +10,6 @@
     using Task = System.Threading.Tasks.Task;
     using System.Collections.Generic;
 
-
     [Cmdlet(VerbsCommon.Get, "OctoUser", ConfirmImpact = ConfirmImpact.Low)]
     public class GetOctoUser : OctoCmdlet
     {
@@ -85,8 +84,6 @@
                 {
                     WriteObject(response.Data);
                 }
-
-
             }
             else if (ListAvailable.IsPresent || Username != string.Empty)
             {
@@ -111,9 +108,7 @@
                        .FirstOrDefault(
                            i => (string.Compare(i.Username, filterByUsername, StringComparison.InvariantCultureIgnoreCase) == 0)));
                     }
-
                 }
-
             }
         }
     }
