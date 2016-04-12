@@ -90,6 +90,7 @@
     <Compile Include="GetOctoVariableSet.cs" />
     <Compile Include="NewOctoDeployment.cs" />
     <Compile Include="NewOctoUser.cs" />
+    <Compile Include="SetOctoTeam.cs" />
     <Compile Include="SetOctoRelease .cs" />
     <Compile Include="NewOctoRelease.cs" />
     <Compile Include="OctoCmdlet.cs" />
