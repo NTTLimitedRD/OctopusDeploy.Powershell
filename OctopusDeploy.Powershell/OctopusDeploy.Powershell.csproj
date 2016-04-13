@@ -64,6 +64,8 @@
     <Compile Include="Contracts\OctoResponse.cs" />
     <Compile Include="Contracts\Package.cs" />
     <Compile Include="Contracts\PackageTemplate.cs" />
+    <Compile Include="Contracts\PermissionSets.cs" />
+    <Compile Include="Contracts\Permission.cs" />
     <Compile Include="Contracts\Project.cs" />
     <Compile Include="Contracts\ProjectGroup.cs" />
     <Compile Include="Contracts\Team.cs" />
@@ -83,6 +85,7 @@
     <Compile Include="GetOctoProjectGroup.cs" />
     <Compile Include="GetOctoFeeds.cs" />
     <Compile Include="GetOctoTeam.cs" />
+    <Compile Include="GetOctoUserPermissions.cs" />
     <Compile Include="GetOctoUser.cs" />
     <Compile Include="GetOctoReleases.cs" />
     <Compile Include="GetOctoRelease.cs" />

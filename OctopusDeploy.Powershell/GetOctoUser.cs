@@ -85,7 +85,7 @@
                     WriteObject(response.Data);
                 }
             }
-            else if (ListAvailable.IsPresent || Username != string.Empty)
+            else if (ListAvailable.IsPresent || filterByUsername != string.Empty)
             {
                 uri += "/all";
                 var request = new RestRequest(uri, Method.GET);
@@ -97,7 +97,7 @@
                 }
                 else
                 {
-                    if (Username == string.Empty)
+                    if (filterByUsername == string.Empty)
                     {
                         WriteObject(response.Data);
                     }
