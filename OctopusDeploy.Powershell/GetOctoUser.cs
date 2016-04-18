@@ -33,6 +33,16 @@
             set;
         }
 
+        /// <summary>
+        /// The EmailAddress of the user to retrieve.
+        /// </summary>
+        [Parameter(Mandatory = false, ParameterSetName = "GetOctoUserByEmailAddress")]
+        public string EmailAddress
+        {
+            get;
+            set;
+        }
+
         [Parameter(Mandatory = false, ParameterSetName = "ListAvailable")]
         public SwitchParameter ListAvailable
         {
@@ -53,6 +63,7 @@
 
             string userId = string.Empty;
             string filterByUsername = string.Empty;
+            string filterByEmailAddress = string.Empty;
 
             switch (ParameterSetName)
             {
@@ -64,6 +75,11 @@
                 case "GetOctoUserByUsername":
                     {
                         filterByUsername = Username;
+                        break;
+                    }
+                case "GetOctoUserByEmailAddress":
+                    {
+                        filterByEmailAddress = EmailAddress;
                         break;
                     }
             }
@@ -85,7 +101,7 @@
                     WriteObject(response.Data);
                 }
             }
-            else if (ListAvailable.IsPresent || filterByUsername != string.Empty)
+            else if (ListAvailable.IsPresent || filterByUsername != string.Empty || filterByEmailAddress != string.Empty)
             {
                 uri += "/all";
                 var request = new RestRequest(uri, Method.GET);
@@ -97,16 +113,23 @@
                 }
                 else
                 {
-                    if (filterByUsername == string.Empty)
+                    if (filterByUsername == string.Empty && filterByEmailAddress == string.Empty)
                     {
                         WriteObject(response.Data);
+                    }
+                    else if (filterByUsername != string.Empty)
+                    {
+                        var allUsers = response;
+                        WriteObject(allUsers.Data
+                       .FirstOrDefault(
+                           i => (string.Compare(i.Username, filterByUsername, StringComparison.InvariantCultureIgnoreCase) == 0)));
                     }
                     else
                     {
                         var allUsers = response;
                         WriteObject(allUsers.Data
                        .FirstOrDefault(
-                           i => (string.Compare(i.Username, filterByUsername, StringComparison.InvariantCultureIgnoreCase) == 0)));
+                           i => (string.Compare(i.EmailAddress, filterByEmailAddress, StringComparison.InvariantCultureIgnoreCase) == 0)));
                     }
                 }
             }
