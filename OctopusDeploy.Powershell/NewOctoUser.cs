@@ -89,28 +89,6 @@
         {
             var client = new RestClient(BaseUri);
 
-            //switch (ParameterSetName)
-            //{
-            //    case "NewOctoReleaseByProjectId":
-            //        {
-            //            projectId = ProjectId;
-            //            var project = await GetProjectAsync(client, ProjectId);
-            //            deploymentProecessId = project.DeploymentProcessId;
-
-            //            break;
-            //        }
-            //    case "NewOctoReleaseByProject":
-            //        {
-            //            projectId = Project.Id;
-            //            deploymentProecessId = Project.DeploymentProcessId;
-
-            //            break;
-            //        }
-            //}
-
-            //var specificPackageVersions = SpecificPackageVersions.Cast<DictionaryEntry>()
-            //                                                       .ToDictionary(k => k.Key.ToString(), v => v.Value.ToString());
-
             var request = new RestRequest("/api/users", Method.POST);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
             request.AddJsonBody(new Contracts.User

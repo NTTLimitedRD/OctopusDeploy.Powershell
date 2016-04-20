@@ -127,9 +127,11 @@
                     else
                     {
                         var allUsers = response;
-                        WriteObject(allUsers.Data
-                       .FirstOrDefault(
-                           i => (string.Compare(i.EmailAddress, filterByEmailAddress, StringComparison.InvariantCultureIgnoreCase) == 0)));
+                        foreach (var user in allUsers.Data.Where(user => user.EmailAddress != null && user.EmailAddress.ToLower().Contains(filterByEmailAddress.ToLower())))
+                        {
+                            WriteObject(user);
+                            break;
+                        }
                     }
                 }
             }
