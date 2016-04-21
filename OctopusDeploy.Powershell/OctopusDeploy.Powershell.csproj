@@ -92,6 +92,7 @@
     <Compile Include="GetOctoTask.cs" />
     <Compile Include="GetOctoVariableSet.cs" />
     <Compile Include="NewOctoDeployment.cs" />
+    <Compile Include="RemoveOctoUser.cs" />
     <Compile Include="NewOctoUser.cs" />
     <Compile Include="SetOctoTeam.cs" />
     <Compile Include="SetOctoRelease .cs" />
