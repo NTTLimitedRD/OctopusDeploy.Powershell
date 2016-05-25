@@ -76,6 +76,7 @@
     <Compile Include="Contracts\StepPackage.cs" />
     <Compile Include="Contracts\Task.cs" />
     <Compile Include="Contracts\Variable.cs" />
+    <Compile Include="Contracts\LibraryVariableSet.cs" />
     <Compile Include="Contracts\VariableSet.cs" />
     <Compile Include="GetOctoDeploymentProcess.cs" />
     <Compile Include="GetOctoDeployment.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="GetOctoReleases.cs" />
     <Compile Include="GetOctoRelease.cs" />
     <Compile Include="GetOctoTask.cs" />
+    <Compile Include="GetOctoLibraryVariableSet.cs" />
     <Compile Include="GetOctoVariableSet.cs" />
     <Compile Include="NewOctoDeployment.cs" />
     <Compile Include="RemoveOctoUser.cs" />
