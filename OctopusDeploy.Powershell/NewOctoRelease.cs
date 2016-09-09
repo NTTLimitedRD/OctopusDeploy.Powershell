@@ -126,22 +126,39 @@
            
             var request = new RestRequest("/api/releases", Method.POST);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
+            var releaseNotes = string.IsNullOrEmpty(ReleaseNotes)
+                ? packagesDescription
+                : string.Join(System.Environment.NewLine + System.Environment.NewLine, ReleaseNotes, packagesDescription);
             request.AddJsonBody(new Contracts.Release
             {
                 ChannelId = channelId,
                 ProjectId = projectId,
                 Version = Version,
                 SelectedPackages = packages.ToList(),
-                ReleaseNotes = string.IsNullOrEmpty(ReleaseNotes) ? packagesDescription : string.Join(System.Environment.NewLine+System.Environment.NewLine, ReleaseNotes, packagesDescription)
+                ReleaseNotes = releaseNotes
             });
 
             var response = await client.ExecuteTaskAsync<Contracts.Release>(request);
             if (response.StatusCode != HttpStatusCode.Created)
             {
-                WriteError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
+                ThrowTerminatingError(new ErrorRecord(
+                           new Exception(
+                               string.Format("Unable to create a release. ProjectId:{0} ChannelId:{1} Version:{2}, selected packages: {3}, Release Notes {4}, Api: {5}, Api Error:{6}",
+                                   projectId,
+                                   channelId,
+                                   Version,
+                                   packagesDescription,
+                                   releaseNotes,
+                                   response?.ResponseUri.ToString(),
+                                   response.ErrorMessage ?? response.Content)),
+                           "ApiError",
+                           ErrorCategory.OpenError,
+                           null
+                       ));
             }
             else
             {
+                WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
                 WriteObject(response.Data);
             }
         }
@@ -155,8 +172,22 @@
 
             var response = await client.ExecuteTaskAsync<Contracts.Project>(request);
             if (response.StatusCode != HttpStatusCode.OK)
-                ThrowTerminatingError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
+            {
+                ThrowTerminatingError(
+                    new ErrorRecord(
+                        new Exception(
+                            string.Format(
+                                "Unable to get project. projectId:{0}, Api: {1}, Api Error:{2}",
+                                projectId,
+                                response?.ResponseUri.ToString(),
+                                response.ErrorMessage ?? response.Content)),
+                        "ApiError",
+                        ErrorCategory.OpenError,
+                        null
+                        ));
+            }
 
+            WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
             return response.Data;
         }
 
@@ -175,7 +206,22 @@
 
             var response = await client.ExecuteTaskAsync<Contracts.PagedResult<Channel>>(request);
             if (response.StatusCode != HttpStatusCode.OK)
-                ThrowTerminatingError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
+            {
+                ThrowTerminatingError(
+                    new ErrorRecord(
+                        new Exception(
+                            string.Format(
+                                "Unable to get project channel. projectId:{0} channelName:{1}, Api: {2}, Api Error:{3}",
+                                projectId,
+                                channelName,
+                                response?.ResponseUri.ToString(),
+                                response.ErrorMessage ?? response.Content)),
+                        "ApiError",
+                        ErrorCategory.OpenError,
+                        null
+                        ));
+            }
+            WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
 
             channel = response.Data.Items.FirstOrDefault(ch => string.Compare(ch.Name, channelName.Trim(' '), StringComparison.OrdinalIgnoreCase) == 0);
 
@@ -205,7 +251,22 @@
 
             var response = await client.ExecuteTaskAsync<Contracts.DeploymentProcessTemplate>(request);
             if (response.StatusCode != HttpStatusCode.OK)
-                ThrowTerminatingError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
+            {
+                ThrowTerminatingError(
+                    new ErrorRecord(
+                        new Exception(
+                            string.Format(
+                                "Unable to get deploymentprocess template. deploymentProcessId:{0} channelId:{1}, Api: {2}, Api Error:{3}",
+                                deploymentProcessId,
+                                channelId,
+                                response?.ResponseUri.ToString(),
+                                response.ErrorMessage ?? response.Content)),
+                        "ApiError",
+                        ErrorCategory.OpenError,
+                        null
+                        ));                
+            }
+            WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
 
             return response.Data.Packages;
         }
@@ -231,15 +292,19 @@
                 {
                     ThrowTerminatingError(new ErrorRecord(
                             new Exception(
-                                string.Format("Package is missing from feed. PackageId:{0} Version:{1} Feed:{2}",
+                                string.Format("Package is missing from feed. PackageId:{0} Version:{1} Feed:{2}, Api: {3}, Api Error:{4}",
                                     packageTemplate.NuGetPackageId,
                                     specificPackageVersions[packageTemplate.NuGetPackageId],
-                                    packageTemplate.NuGetFeedName)),
+                                    packageTemplate.NuGetFeedName,
+                                    noteResponse ?.ResponseUri.ToString(),
+                                    noteResponse.ErrorMessage ?? noteResponse.Content)),
                             "MissingPackage",
                             ErrorCategory.ObjectNotFound,
                             null
                         ));
                 }
+                WriteVerbose(string.Format("Api: {0}, Api Response:{1}", noteResponse.ResponseUri, noteResponse.Content));
+
                 return new StepPackage
                 {
                     PackageId = packageTemplate.NuGetPackageId,
@@ -256,7 +321,19 @@
 
             var response = await client.ExecuteTaskAsync<List<Contracts.Package>>(request);
             if (response.StatusCode != HttpStatusCode.OK)
-                ThrowTerminatingError(new ErrorRecord(new Exception(response.ErrorMessage ?? response.Content), "Failed", ErrorCategory.OpenError, null));
+                ThrowTerminatingError(
+                    new ErrorRecord(
+                        new Exception(
+                            string.Format("Package is missing from feed. PackageId:{0} Feed:{1}, Api: {2}, Api Error:{3}", 
+                            packageTemplate.NuGetPackageId,
+                            packageTemplate.NuGetFeedId,
+                            response.ResponseUri.ToString(),
+                            response.ErrorMessage ?? response.Content)),
+                        "MissingPackage",
+                        ErrorCategory.OpenError,
+                        null));
+
+            WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
 
             var package = response.Data.FirstOrDefault();
 
