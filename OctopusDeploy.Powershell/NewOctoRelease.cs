@@ -157,8 +157,8 @@
                        ));
             }
             else
-            {
-                WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
+            {                
+                WriteVerbose(string.Format("Api: {0}, Http Status:{1} Api Response:{2}", response.ResponseUri, response.StatusCode, response.Content));
                 WriteObject(response.Data);
             }
         }
@@ -186,8 +186,9 @@
                         null
                         ));
             }
+            
+            WriteVerbose(string.Format("Api: {0}, Http Status:{1} Api Response:{2}", response.ResponseUri, response.StatusCode, response.Content));
 
-            WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
             return response.Data;
         }
 
@@ -220,8 +221,8 @@
                         ErrorCategory.OpenError,
                         null
                         ));
-            }
-            WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
+            }            
+            WriteVerbose(string.Format("Api: {0}, Http Status:{1} Api Response:{2}", response.ResponseUri, response.StatusCode, response.Content));
 
             channel = response.Data.Items.FirstOrDefault(ch => string.Compare(ch.Name, channelName.Trim(' '), StringComparison.OrdinalIgnoreCase) == 0);
 
@@ -265,8 +266,8 @@
                         ErrorCategory.OpenError,
                         null
                         ));                
-            }
-            WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
+            }            
+            WriteVerbose(string.Format("Api: {0}, Http Status:{1} Api Response:{2}", response.ResponseUri, response.StatusCode, response.Content));
 
             return response.Data.Packages;
         }
@@ -303,7 +304,7 @@
                             null
                         ));
                 }
-                WriteVerbose(string.Format("Api: {0}, Api Response:{1}", noteResponse.ResponseUri, noteResponse.Content));
+                WriteVerbose(string.Format("Api: {0}, Http Status:{1} Api Response:{2}", noteResponse.ResponseUri, noteResponse.StatusCode, noteResponse.Content));
 
                 return new StepPackage
                 {
@@ -332,8 +333,9 @@
                         "MissingPackage",
                         ErrorCategory.OpenError,
                         null));
+            
+            WriteVerbose(string.Format("Api: {0}, Http Status:{1} Api Response:{2}", response.ResponseUri, response.StatusCode, response.Content));
 
-            WriteVerbose(string.Format("Api: {0}, Api Response:{1}", response.ResponseUri, response.Content));
 
             var package = response.Data.FirstOrDefault();
 
