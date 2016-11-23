@@ -118,7 +118,7 @@
 	        var specificPackageVersions = SpecificPackageVersions.Cast<DictionaryEntry>()
 																	.ToDictionary(k => k.Key.ToString(), v => v.Value.ToString());
 
-            var tasks = packageTemplates.Select(packageTemplate => GetLatestPackageFromTemplatesAsync(client, packageTemplate, specificPackageVersions));
+            var tasks = packageTemplates.Select(packageTemplate => GetLatestPackageFromTemplatesAsync(client, packageTemplate, specificPackageVersions, channel));
             var packages = await Task.WhenAll(tasks);
 
             string packagesDescription = string.Join(System.Environment.NewLine,
@@ -272,7 +272,7 @@
             return response.Data.Packages;
         }
 
-        async Task<Contracts.StepPackage> GetLatestPackageFromTemplatesAsync(IRestClient client, Contracts.PackageTemplate packageTemplate, IDictionary<string, string> specificPackageVersions = null)
+        async Task<Contracts.StepPackage> GetLatestPackageFromTemplatesAsync(IRestClient client, Contracts.PackageTemplate packageTemplate, IDictionary<string, string> specificPackageVersions = null, Channel channel = null)
         {            
             RestRequest request;
             // The Validation should force indexing of this package (for older versions)
@@ -314,11 +314,33 @@
                 };
             }
 
+
+            var versionTag = string.Empty;
+            if (channel != null)
+            {
+               var stepRule = channel.Rules.FirstOrDefault(rule => rule.Actions.Contains(packageTemplate.StepName));
+               if(stepRule != null)
+                {
+                    versionTag = stepRule.Tag;
+                }                 
+            }
+                
             const string resourcePath = "/api/feeds/{feed-id}/packages";
             request = new RestRequest(resourcePath, Method.GET);
             request.AddHeader("X-Octopus-ApiKey", ApiKey);
             request.AddUrlSegment("feed-id", packageTemplate.NuGetFeedId);
             request.AddQueryParameter("packageIds", packageTemplate.NuGetPackageId); // Just returns the latest release version of this package
+            request.AddQueryParameter("partialMatch", "false"); 
+            request.AddQueryParameter("includeMultipleVersions", "false"); 
+            request.AddQueryParameter("includeNotes", "false"); 
+            request.AddQueryParameter("includePreRelease", "true"); 
+            request.AddQueryParameter("take", "1"); 
+            
+            if (!string.IsNullOrWhiteSpace(versionTag))
+            {
+                // This is to support the channel versions rules to be respected
+                request.AddQueryParameter("preReleaseTag", System.Web.HttpUtility.UrlEncode(versionTag)); 
+            }
 
             var response = await client.ExecuteTaskAsync<List<Contracts.Package>>(request);
             if (response.StatusCode != HttpStatusCode.OK)

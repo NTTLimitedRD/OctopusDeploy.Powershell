@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace DD.Cloud.OctopusDeploy.Powershell.Contracts
 {
@@ -28,6 +29,12 @@ namespace DD.Cloud.OctopusDeploy.Powershell.Contracts
         }
 
         public string LifecycleId
+        {
+            get;
+            set;
+        }
+
+        public List<VersionRule> Rules
         {
             get;
             set;
