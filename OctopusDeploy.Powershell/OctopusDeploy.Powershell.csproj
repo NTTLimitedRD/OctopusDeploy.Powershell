@@ -55,6 +55,7 @@
     </Compile>
     <Compile Include="AsyncCmdlet.cs" />
     <Compile Include="Contracts\Lifecycle.cs" />
+    <Compile Include="Contracts\RetentionPolicy.cs" />
     <Compile Include="Contracts\VersionRule.cs" />
     <Compile Include="Contracts\PagedResponse.cs" />
     <Compile Include="Contracts\Deployment.cs" />
@@ -88,7 +89,6 @@
     <Compile Include="GetOctoEnvironment.cs" />
     <Compile Include="GetOctoLifecycle.cs" />
     <Compile Include="GetOctoFeed.cs" />
-    <Compile Include="GetOctoLifecycles.cs" />
     <Compile Include="GetOctoProject.cs" />
     <Compile Include="GetOctoProjectGroup.cs" />
     <Compile Include="GetOctoFeeds.cs" />

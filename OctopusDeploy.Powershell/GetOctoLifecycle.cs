@@ -15,7 +15,7 @@ namespace DD.Cloud.OctopusDeploy.Powershell
         /// <summary>
         /// The name of the lifecycle to retrieve.
         /// </summary>
-        [Parameter(Mandatory = false, ParameterSetName = "GetOctoLifecycleByName")]
+        [Parameter(Mandatory = true, ParameterSetName = "GetOctoLifecycleByName")]
         public string Name
         {
             get;

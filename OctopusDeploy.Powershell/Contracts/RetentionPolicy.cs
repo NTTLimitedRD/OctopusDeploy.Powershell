@@ -6,29 +6,26 @@ using System.Threading.Tasks;
 
 namespace DD.Cloud.OctopusDeploy.Powershell.Contracts
 {
-    public class Lifecycle
+    /// <summary>
+    /// The data contract for a RetentionPolicy
+    /// </summary>
+    public class RetentionPolicy
     {
-        public string Id
+        public string Unit
         {
             get;
             set;
         }
-        public string Name
+        public int QuantityToKeep
         {
             get;
             set;
         }
-        public string Description
+        public bool ShouldKeepForever
         {
             get;
             set;
         }
 
-
-        public List<Phase> Phases
-        {
-            get;
-            set;
-        }
     }
 }
