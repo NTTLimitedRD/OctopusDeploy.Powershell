@@ -104,6 +104,7 @@
     <Compile Include="NewOctoEnvironment.cs" />
     <Compile Include="RemoveOctoUser.cs" />
     <Compile Include="NewOctoUser.cs" />
+    <Compile Include="SetOctoLifecycle.cs" />
     <Compile Include="SetOctoTeam.cs" />
     <Compile Include="SetOctoRelease .cs" />
     <Compile Include="NewOctoRelease.cs" />
