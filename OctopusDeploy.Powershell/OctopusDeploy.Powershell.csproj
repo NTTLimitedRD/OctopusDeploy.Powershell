@@ -53,6 +53,7 @@
       <Link>Properties\SolutionAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AsyncCmdlet.cs" />
+    <Compile Include="Contracts\Lifecycle.cs" />
     <Compile Include="Contracts\PagedResponse.cs" />
     <Compile Include="Contracts\Deployment.cs" />
     <Compile Include="Contracts\DeploymentProcess.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Contracts\Permission.cs" />
     <Compile Include="Contracts\Project.cs" />
     <Compile Include="Contracts\ProjectGroup.cs" />
+    <Compile Include="Contracts\Lifecycles.cs" />
     <Compile Include="Contracts\Team.cs" />
     <Compile Include="Contracts\User.cs" />
     <Compile Include="Contracts\Releases.cs" />
@@ -75,13 +77,16 @@
     <Compile Include="Contracts\Scope.cs" />
     <Compile Include="Contracts\StepPackage.cs" />
     <Compile Include="Contracts\Task.cs" />
+    <Compile Include="Contracts\Phase.cs" />
     <Compile Include="Contracts\Variable.cs" />
     <Compile Include="Contracts\LibraryVariableSet.cs" />
     <Compile Include="Contracts\VariableSet.cs" />
     <Compile Include="GetOctoDeploymentProcess.cs" />
     <Compile Include="GetOctoDeployment.cs" />
     <Compile Include="GetOctoEnvironment.cs" />
+    <Compile Include="GetOctoLifecycle.cs" />
     <Compile Include="GetOctoFeed.cs" />
+    <Compile Include="GetOctoLifecycles.cs" />
     <Compile Include="GetOctoProject.cs" />
     <Compile Include="GetOctoProjectGroup.cs" />
     <Compile Include="GetOctoFeeds.cs" />
@@ -94,6 +99,7 @@
     <Compile Include="GetOctoLibraryVariableSet.cs" />
     <Compile Include="GetOctoVariableSet.cs" />
     <Compile Include="NewOctoDeployment.cs" />
+    <Compile Include="NewOctoEnvironment.cs" />
     <Compile Include="RemoveOctoUser.cs" />
     <Compile Include="NewOctoUser.cs" />
     <Compile Include="SetOctoTeam.cs" />
