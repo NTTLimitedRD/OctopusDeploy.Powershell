@@ -42,6 +42,7 @@
       <Private>True</Private>
       <HintPath>..\packages\System.Management.Automation.6.1.7601.17515\lib\net45\System.Management.Automation.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -54,6 +55,7 @@
     </Compile>
     <Compile Include="AsyncCmdlet.cs" />
     <Compile Include="Contracts\Lifecycle.cs" />
+    <Compile Include="Contracts\VersionRule.cs" />
     <Compile Include="Contracts\PagedResponse.cs" />
     <Compile Include="Contracts\Deployment.cs" />
     <Compile Include="Contracts\DeploymentProcess.cs" />
